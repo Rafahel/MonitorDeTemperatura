@@ -1,7 +1,16 @@
 import serial
 import datetime
 from threading import Thread
+'''
+                                                    IMPORTANTE!
+    Para que esse programa funcione corretamente é necessário ter uma placa arduino conectada ao computador na porta
+    COM3 e precisa estar utilizando o código descrito em Medidor_temperatura.ino junto com um sensor de temperatura
+    LM35
 
+
+
+
+'''
 
 
 from PyQt4 import QtCore, QtGui
