@@ -175,7 +175,6 @@ class Ui_MainWindow(object):
             if self.contadorTempo == 60:
                 self.listaTemperatura.append(self.leitura)
                 self.listaHorarios.append(horario)
-
                 self.contadorTempo = 0
             self.lcdDisplay.display("%.1f" % self.leitura)
             self.contadorTempo+=1
