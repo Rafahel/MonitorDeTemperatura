@@ -125,7 +125,7 @@ class Ui_MainWindow(object):
         except:
             print("Nada detectado na porta serial...")
         self.now = datetime.datetime.now()
-        self.dia = format(self.now.day) + "-" + format(self.now.month) + "-" + format(self.now.year) + ".txt"
+        self.dia = format(self.now.day) + "-" + format(self.now.month) + "-" + format(self.now.year)
         self.diaInicial = self.dia
         self.iniciar = False
         self.finalizar = False
@@ -155,24 +155,29 @@ class Ui_MainWindow(object):
                 self.arquivo = open(self.dia + ".txt", 'w')
                 for i in range(len(self.listaTemperatura)):
                     self.arquivo.write(format(self.listaTemperatura[i]) + "    " + self.listaHorarios[i] + "\n" )
+                    self.listaTemperatura.pop(i)
+                    self.listaHorarios.pop(i)
                 self.arquivo.close()
                 app.quit()
                 break
             self.leitura = float(self.port.readline().strip())  # Faz a leitura da temperatura
-            self.dia = format(self.now.day) + "-" + format(self.now.month) + "-" + format(self.now.year) + ".txt"
+            self.dia = format(self.now.day) + "-" + format(self.now.month) + "-" + format(self.now.year)
             self.now = datetime.datetime.now()
             horario = (format(self.now.hour) + ":" + format(self.now.minute) + ":" + format(self.now.second))
-            self.listaHorarios.append(horario)
             if self.diaInicial != self.dia:
                 self.arquivo.close()
                 self.diaInicial = self.dia
                 self.arquivo = open(self.dia + ".txt", 'w')
                 for i in range(len(self.listaTemperatura)):
                     self.arquivo.write(format(self.listaTemperatura[i]) + "    " + self.listaHorarios[i] + "\n" )
+                    self.listaTemperatura.pop(i)
+                    self.listaHorarios.pop(i)
             if self.contadorTempo == 60:
                 self.listaTemperatura.append(self.leitura)
+                self.listaHorarios.append(horario)
+
                 self.contadorTempo = 0
-            self.lcdDisplay.display(self.leitura)
+            self.lcdDisplay.display("%.1f" % self.leitura)
             self.contadorTempo+=1
             self.s += 1
             if self.s == 60:
