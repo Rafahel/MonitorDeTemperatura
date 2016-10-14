@@ -83,6 +83,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 
+        self.finalizar.setDisabled(True)
         self.finalizar.clicked.connect(self.finaliza)
         self.iniciar.clicked.connect(self.inicia)
         # get the palette
@@ -137,57 +138,85 @@ class Ui_MainWindow(object):
         self.hor = 0
         self.m = 0
         self.s = 0
+        self.teste = format(self.now.minute)
+        self.testeM = format(self.now.minute)
+        self.primeiraIteracao = True
 
     def finaliza(self):
-        if self.iniciar == True:
-            self.finalizar = True
+        self.finalizar = True
 
     def inicia(self):
-        self.t.start()
+        try:
+            self.t.start()
+        except:
+            print("Erro ao criar a thread.")
 
     def fechaThread(self):
         self.t.join()
 
     def monitora(self):
-        self.iniciar = True
+        self.finalizar.setEnabled(True)  # Habilita botão finalizar
+        '''
+                                           Inicia looping para leitura e amostragem de dados
+        '''
         while True:
+            '''
+                                                Gera arquivo se o botão finalizar for selecionado
+            '''
             if self.finalizar == True:
-                self.arquivo = open(self.dia + ".txt", 'w')
-                for i in range(len(self.listaTemperatura)):
-                    self.arquivo.write(format(self.listaTemperatura[i]) + "    " + self.listaHorarios[i] + "\n" )
-                    self.listaTemperatura.pop(i)
-                    self.listaHorarios.pop(i)
-                self.arquivo.close()
+                self.geraArquivo()
                 app.quit()
                 break
             self.leitura = float(self.port.readline().strip())  # Faz a leitura da temperatura
-            self.dia = format(self.now.day) + "-" + format(self.now.month) + "-" + format(self.now.year)
             self.now = datetime.datetime.now()
             horario = (format(self.now.hour) + ":" + format(self.now.minute) + ":" + format(self.now.second))
-            if self.diaInicial != self.dia:
-                self.arquivo.close()
-                self.diaInicial = self.dia
-                self.arquivo = open(self.dia + ".txt", 'w')
-                for i in range(len(self.listaTemperatura)):
-                    self.arquivo.write(format(self.listaTemperatura[i]) + "    " + self.listaHorarios[i] + "\n" )
-                    self.listaTemperatura.pop(i)
-                    self.listaHorarios.pop(i)
             if self.contadorTempo == 60:
                 self.listaTemperatura.append(self.leitura)
                 self.listaHorarios.append(horario)
                 self.contadorTempo = 0
             self.lcdDisplay.display("%.1f" % self.leitura)
             self.contadorTempo+=1
+            '''
+                                    Controlador de tempo do display da janela
+            '''
             self.s += 1
-            if self.s == 60:
+            if self.s == 300:
                 self.m += 1
                 self.s = 0
                 if self.m == 60:
                     self.hor +=1
                     self.m = 0
+            '''
+                                                Controlador dos labels de tempo decorrido da janela
+            '''
             self.sec.setText(format(self.s))
             self.min.setText(format(self.m))
             self.h.setText(format(self.hor))
+            '''
+                                    Cria outro arquivo ao chegar a meia noite
+            '''
+            if self.diaInicial != self.dia:
+                self.geraArquivo()
+                self.diaInicial = self.dia
+            self.dia = format(self.now.day) + "-" + format(self.now.month) + "-" + format(self.now.year)
+            '''
+                                    Salva na primeira passada do looping a temperatura e horário
+            '''
+            if self.primeiraIteracao:
+                self.listaTemperatura.append(self.leitura)
+                self.listaHorarios.append(horario)
+                self.primeiraIteracao = False
+
+    def geraArquivo(self):
+        try:
+            self.arquivo = open(self.diaInicial + ".txt", 'w')
+            for i in range(len(self.listaTemperatura)):
+                self.arquivo.write(format(self.listaTemperatura[i]) + "    " + self.listaHorarios[i] + "\n")
+                self.listaTemperatura.pop(i)
+                self.listaHorarios.pop(i)
+            self.arquivo.close()
+        except:
+            print("Erro ao escrever arquivo.")
 
 
 
