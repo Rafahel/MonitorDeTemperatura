@@ -170,7 +170,7 @@ class Ui_MainWindow(object):
             self.leitura = float(self.port.readline().strip())  # Faz a leitura da temperatura
             self.now = datetime.datetime.now()
             horario = (format(self.now.hour) + ":" + format(self.now.minute) + ":" + format(self.now.second))
-            if self.contadorTempo == 60:
+            if self.contadorTempo == 300:
                 self.listaTemperatura.append(self.leitura)
                 self.listaHorarios.append(horario)
                 self.contadorTempo = 0
@@ -180,7 +180,7 @@ class Ui_MainWindow(object):
                                     Controlador de tempo do display da janela
             '''
             self.s += 1
-            if self.s == 300:
+            if self.s == 60:
                 self.m += 1
                 self.s = 0
                 if self.m == 60:
