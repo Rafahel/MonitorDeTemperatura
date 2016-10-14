@@ -142,6 +142,7 @@ class Ui_MainWindow(object):
         self.testeM = format(self.now.minute)
         self.primeiraIteracao = True
 
+
     def finaliza(self):
         self.finalizar = True
 
