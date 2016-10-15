@@ -212,7 +212,7 @@ class ThreadLeitura(QtCore.QThread):
                 '''
 
                 self.segundosParaSalvarDados += 1
-                if self.segundosParaSalvarDados == 60:
+                if self.segundosParaSalvarDados == 300:
                     listaTemperaturas.append(temperatura)
                     listaHorarios.append(self.diaAtual)
                     self.segundosParaSalvarDados = 0
