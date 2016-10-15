@@ -90,7 +90,7 @@ class MainUiClass(QtGui.QMainWindow, Interface.Ui_MainWindow):
         try:
             self.now = datetime.datetime.now()
             arquivo = open(format(self.now.day) + "-" + format(self.now.month)
-                           + "-" + format(self.now.year) + "txt", 'w')
+                           + "-" + format(self.now.year) + ".txt", 'w')
             for i in range(len(listaTemperaturas)):
                 arquivo.write("%.1f" % listaTemperaturas[i] + "  " + format(listaHorarios[i]) + "\n")
             listaHorarios[:] = []
