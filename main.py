@@ -163,10 +163,11 @@ class ThreadLeitura(QtCore.QThread):
             try:
                 '''
 
-                    Faz a leitura da porta.
+                    Faz a leitura da portae atualiza horario
 
                 '''
                 temperatura = float(self.port.readline())
+                self.now = datetime.datetime.now()
                 self.emit(QtCore.SIGNAL("temp"), str(temperatura))
                 self.horaAtual = format(self.now.hour) + ":" + format(self.now.minute) + ":" + format(
                     self.now.second)
@@ -212,7 +213,7 @@ class ThreadLeitura(QtCore.QThread):
                 '''
 
                 self.segundosParaSalvarDados += 1
-                if self.segundosParaSalvarDados == 300:
+                if self.segundosParaSalvarDados == 600:
                     listaTemperaturas.append(temperatura)
                     listaHorarios.append(self.horaAtual)
                     self.segundosParaSalvarDados = 0
