@@ -224,6 +224,7 @@ class ThreadLeitura(QtCore.QThread):
                     com as temperaturas do dia passado e atualiza o dia atual para o novo dia.
 
                 '''
+
                 if self.diaInicial != self.diaAtual:
                     self.emit(QtCore.SIGNAL("GERAARQUIVO"), str(self.diaInicial))
                     self.diaInicial = format(self.now.day) + "-" + format(self.now.month) + "-" + format(
